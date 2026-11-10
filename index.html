@@ -3,94 +3,141 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#12263a">
 <title>Urban Risk Intelligence Platform – Protótipo</title>
 <style>
 :root{
-  --bg:#f4f6f8; --card:#ffffff; --ink:#1f2933; --muted:#62707d; --line:#dde3e9;
-  --brand:#c2185b; --brand-ink:#ffffff; --side:#263238; --side-ink:#eceff1;
-  --ok:#2e7d32; --warn:#f9a825; --danger:#c62828; --crit:#6a1b9a; --info:#1565c0;
-  --water:#1976d2; --heat:#ef6c00; --serv:#6d4c41;
+  --paper:#f2f4f6; --surface:#ffffff; --ink:#12263a; --muted:#566676; --line:#d5dce3;
+  --accent:#0b4f8a; --accent-ink:#ffffff; --side:#12263a; --side-ink:#e8eef4; --focus:#1a73e8;
+  --ok:#2f7d4f; --warn:#e0a100; --danger:#c23a1e; --crit:#5b1f7a;
+  --water:#0a6f8f; --heat:#a85600; --serv:#6a4f3a;
+  --band:#12263a; --band-ink:#ffffff; --band-muted:#a9bccd;
 }
 @media (prefers-color-scheme: dark){
-  :root{ --bg:#11171c; --card:#1a232b; --ink:#e8edf1; --muted:#9aa8b4; --line:#2c3944; --side:#0c1115; }
+  :root{ --paper:#0e151c; --surface:#16202a; --ink:#e8edf1; --muted:#a3b1bd; --line:#2b3947; --side:#0a1016;
+         --accent:#5aa9f0; --accent-ink:#06121d; --band:#1b2c3d; --focus:#7db8f5;
+         --ok:#58b57a; --danger:#ef6a4d; --crit:#b57be0; --water:#4fb3d0; --heat:#e59a3d; --serv:#c0a086; }
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px;background:var(--paper);color:var(--ink);line-height:1.5}
 a{color:inherit}
-.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
-aside{background:var(--side);color:var(--side-ink);padding:16px 12px;position:sticky;top:0;height:100vh;overflow:auto}
-aside h1{font-size:15px;margin:4px 8px 14px;letter-spacing:.3px}
-aside h1 small{display:block;font-weight:400;opacity:.7;font-size:11px;margin-top:2px}
-nav button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;color:inherit;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:14px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:8px;top:-60px;background:var(--accent);color:var(--accent-ink);padding:10px 14px;border-radius:8px;z-index:50;text-decoration:none}
+.skip:focus{top:8px}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+aside{background:var(--side);color:var(--side-ink);padding:20px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+aside h1{font-size:16px;font-weight:650;letter-spacing:-.01em;margin:2px 10px 18px;line-height:1.25}
+aside h1 small{display:block;font-weight:400;opacity:.75;font-size:12px;margin-top:4px;letter-spacing:0}
+nav{display:flex;flex-direction:column;gap:2px}
+nav button{display:flex;gap:12px;align-items:center;width:100%;min-height:44px;text-align:left;background:none;border:0;color:inherit;padding:8px 12px;border-radius:8px;cursor:pointer;font:inherit;font-size:14px;transition:background-color .12s}
 nav button:hover{background:rgba(255,255,255,.08)}
-nav button.on{background:var(--brand);color:var(--brand-ink)}
-nav .badge{margin-left:auto;background:var(--danger);color:#fff;border-radius:10px;font-size:11px;padding:1px 7px}
-.persona{margin:14px 6px 0;font-size:12px}
-.persona select{width:100%;margin-top:4px}
-main{padding:22px 26px 60px;max-width:1180px;width:100%}
-h2{margin:0 0 4px;font-size:22px}
-.sub{color:var(--muted);margin:0 0 18px;font-size:14px}
-.grid{display:grid;gap:14px}
-.kpis{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
-.two{grid-template-columns:1.4fr 1fr}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.card h3{margin:0 0 10px;font-size:15px}
-.kpi .v{font-size:28px;font-weight:700}
-.kpi .l{font-size:12.5px;color:var(--muted)}
-.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-size:12px;font-weight:600;color:#fff}
-.p-BAIXO{background:var(--ok)} .p-MEDIO{background:var(--warn);color:#222} .p-ALTO{background:var(--danger)} .p-CRITICO{background:var(--crit)}
+nav button.on{background:rgba(255,255,255,.14);box-shadow:inset 3px 0 0 #7dc0ff;font-weight:600}
+nav .ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+nav .badge{margin-left:auto;background:#d94a2e;color:#fff;border-radius:11px;font-size:12px;font-weight:600;padding:1px 8px;min-width:22px;text-align:center}
+.persona{margin:18px 6px 0;font-size:13px;padding-top:14px;border-top:1px solid rgba(255,255,255,.14)}
+.persona select{width:100%;margin-top:6px}
+main{padding:28px 32px 72px;max-width:1240px;width:100%}
+main:focus{outline:none}
+h2{margin:0 0 4px;font-size:26px;font-weight:650;letter-spacing:-.015em;line-height:1.2}
+.sub{color:var(--muted);margin:0 0 20px;font-size:14.5px;max-width:70ch}
+.grid{display:grid;gap:16px}
+.two{grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;container-type:inline-size}
+.card h3{margin:0 0 12px;font-size:16px;font-weight:650;letter-spacing:-.005em}
+
+/* faixa de situação: o elemento de destaque do painel */
+.band{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));background:var(--band);color:var(--band-ink);border-radius:12px;margin:0 0 24px;overflow:hidden}
+.band .stat{padding:18px 22px;display:flex;flex-direction:column;gap:2px;border-left:1px solid rgba(255,255,255,.14)}
+.band .stat:first-child{border-left:0}
+.band .num{font-size:38px;line-height:1.05;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.band .num small{font-size:20px;font-weight:500;color:var(--band-muted)}
+.band .lab{font-size:13.5px;color:var(--band-muted)}
+
+.pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12.5px;font-weight:600;color:#fff;line-height:1.5}
+.p-BAIXO{background:var(--ok)} .p-MEDIO{background:var(--warn);color:#1b1b1b} .p-ALTO{background:var(--danger)} .p-CRITICO{background:var(--crit)}
 .t-ALAGAMENTO{background:var(--water)} .t-CALOR{background:var(--heat)} .t-SERVICOS{background:var(--serv)}
-.st{background:#546e7a}
+.st{background:#4d6070}
+@media (prefers-color-scheme: dark){ .pill{color:#0b1218} .st{background:#8da1b3} }
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.item{display:flex;gap:12px;align-items:center;padding:11px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+
+/* linhas de evento: a barra lateral colorida indica o risco */
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;padding:12px 8px 12px 14px;border-bottom:1px solid var(--line);border-left:4px solid var(--line);cursor:pointer}
 .item:last-child{border-bottom:0}
 .item:hover{background:rgba(127,127,127,.07)}
-.item .main{flex:1;min-width:0}
+.item.r-BAIXO{border-left-color:var(--ok)} .item.r-MEDIO{border-left-color:var(--warn)} .item.r-ALTO{border-left-color:var(--danger)} .item.r-CRITICO{border-left-color:var(--crit)}
+.item .main{min-width:0;grid-column:2}
 .item .title{font-weight:600}
-.item .meta{font-size:12.5px;color:var(--muted)}
+.item .meta{font-size:13px;color:var(--muted)}
+.item .conf{grid-column:3}
+.rank{grid-column:1;font-size:22px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:1.2ch;text-align:center}
+.item.sem-rank{grid-template-columns:1fr auto}
+.item.sem-rank .main{grid-column:1}
+.item.sem-rank .conf{grid-column:2}
+@container (max-width:470px){
+  .item .conf{grid-column:2;grid-row:2}
+  .item.sem-rank .conf{grid-column:1}
+}
 .meter{height:8px;background:var(--line);border-radius:6px;overflow:hidden;min-width:90px}
 .meter>i{display:block;height:100%}
 .conf-Alta{background:var(--ok)} .conf-Media{background:var(--warn)} .conf-Baixa{background:var(--danger)}
-.confn{font-size:12.5px;font-weight:600;min-width:96px}
-button.btn,.btn{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer}
-button.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
-button.btn:disabled{opacity:.45;cursor:not-allowed}
-select,input[type=text],textarea,input[type=number]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);width:100%}
-label{font-size:13px;font-weight:600;display:block;margin:12px 0 4px}
-.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.filters select{width:auto}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.map{width:100%;height:auto;border-radius:10px;background:#dfe8ee;border:1px solid var(--line)}
-@media (prefers-color-scheme: dark){.map{background:#22313b}}
-.map text{font-size:11px;fill:#455a64}
-@media (prefers-color-scheme: dark){.map text{fill:#b0bec5}}
+.confn{font-size:13px;font-weight:600;min-width:100px;font-variant-numeric:tabular-nums}
+
+button.btn,.btn{background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:8px;padding:10px 16px;min-height:44px;font:inherit;font-size:14.5px;font-weight:600;cursor:pointer;transition:filter .12s,background-color .12s}
+button.btn:hover{filter:brightness(1.1)}
+button.btn.sec{background:transparent;color:var(--ink);border-color:var(--line)}
+button.btn.sec:hover{background:rgba(127,127,127,.1);filter:none}
+button.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+select,input[type=text],textarea,input[type=number]{font:inherit;padding:9px 12px;min-height:44px;border:1px solid #9aa9b6;border-radius:8px;background:var(--surface);color:var(--ink);width:100%}
+textarea{min-height:110px}
+input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;vertical-align:-4px;accent-color:var(--accent)}
+label{font-size:14px;font-weight:600;display:block;margin:14px 0 6px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filters select{width:auto;min-width:170px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;font-weight:600;color:var(--muted)}
+.map{width:100%;height:auto;border-radius:10px;background:#dde8ef;border:1px solid var(--line)}
+@media (prefers-color-scheme: dark){.map{background:#1c2b36}}
+.map text{font-size:12px;fill:#3d5361}
+@media (prefers-color-scheme: dark){.map text{fill:#b7c6d1}}
 .mk{cursor:pointer}
-.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--line)}
-.timeline li{position:relative;padding:0 0 12px 14px;font-size:13.5px}
-.timeline li:before{content:"";position:absolute;left:-22px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
-.notice{background:rgba(21,101,192,.12);border:1px solid rgba(21,101,192,.35);border-radius:10px;padding:10px 12px;font-size:13px}
-.warnbox{background:rgba(249,168,37,.15);border:1px solid rgba(249,168,37,.5);border-radius:10px;padding:10px 12px;font-size:13px}
+.mk:focus-visible{outline:none}
+.mk:focus-visible circle.shape{stroke:var(--focus);stroke-width:4}
+.timeline{list-style:none;margin:0 0 16px;padding:0 0 0 14px;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:0 0 12px 16px;font-size:14px}
+.timeline li:before{content:"";position:absolute;left:-23px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.notice{background:rgba(11,79,138,.1);border:1px solid rgba(11,79,138,.35);border-radius:10px;padding:12px 14px;font-size:14px}
+.warnbox{background:rgba(224,161,0,.16);border:1px solid rgba(224,161,0,.55);border-radius:10px;padding:12px 14px;font-size:14px}
+@media (prefers-color-scheme: dark){ .notice{background:rgba(90,169,240,.12);border-color:rgba(90,169,240,.4)} }
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
 .on-line{background:var(--ok)} .off-line{background:var(--danger)} .deg-line{background:var(--warn)}
-.toast{position:fixed;right:16px;bottom:16px;background:#263238;color:#fff;padding:12px 16px;border-radius:10px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;z-index:20}
+.toast{position:fixed;right:16px;bottom:16px;background:#12263a;color:#fff;padding:14px 18px;border-radius:10px;max-width:360px;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;z-index:20;font-size:14.5px}
 .unread{font-weight:700}
 .mono{font-variant-numeric:tabular-nums}
+@media (max-width:1100px){ .two{grid-template-columns:1fr} }
 @media (max-width:860px){
   .app{grid-template-columns:1fr}
-  aside{position:static;height:auto;padding:10px}
-  nav{display:flex;overflow:auto;gap:4px} nav button{white-space:nowrap;width:auto}
-  main{padding:16px}
-  .two{grid-template-columns:1fr}
+  aside{position:static;height:auto;padding:12px}
+  aside h1{margin-bottom:10px}
+  nav{flex-direction:row;overflow:auto;gap:4px;padding-bottom:4px}
+  nav button{white-space:nowrap;width:auto}
+  nav button.on{box-shadow:inset 0 -3px 0 #7dc0ff}
+  .persona{margin:10px 4px 0;padding-top:10px}
+  main{padding:18px 16px 56px}
+  h2{font-size:23px}
+  .band .stat{padding:14px 16px} .band .num{font-size:32px}
 }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important;animation:none!important} }
 </style>
 </head>
 <body>
+<a class="skip" href="#view">Ir para o conteúdo</a>
 <div class="app">
-<aside>
+<aside aria-label="Menu principal">
   <h1>Urban Risk Intelligence<small>Nova Aurora – monitoramento de riscos urbanos</small></h1>
-  <nav id="nav"></nav>
+  <nav id="nav" aria-label="Telas do protótipo"></nav>
   <div class="persona">
     <label for="persona" style="margin:0">Perfil de uso</label>
     <select id="persona">
@@ -100,7 +147,7 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4p
     </select>
   </div>
 </aside>
-<main id="view"></main>
+<main id="view" tabindex="-1"></main>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -190,39 +237,42 @@ let ctx = {};   // contexto (evento selecionado, filtros)
 const $ = (s,el=document)=>el.querySelector(s);
 const esc = (s)=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.style.display="block"; clearTimeout(toast.h); toast.h=setTimeout(()=>t.style.display="none",3600); }
-const pillRisco = (r)=>`<span class="pill p-${r}">${r==="MEDIO"?"MÉDIO":r}</span>`;
+const ROTULO_RISCO = {BAIXO:"Baixo",MEDIO:"Médio",ALTO:"Alto",CRITICO:"Crítico"};
+const pillRisco = (r)=>`<span class="pill p-${r}">${ROTULO_RISCO[r]}</span>`;
 const pillTipo = (t)=>`<span class="pill t-${t}">${TIPOS[t]}</span>`;
 const pillStatus = (s)=>`<span class="pill st">${STATUS_NOME[s]}</span>`;
 function confBar(e){ const c=confianca(e), n=nivelConf(c);
-  return `<span class="row" style="gap:8px"><span class="meter" title="Confiança ${c}%"><i class="conf-${n}" style="width:${c}%"></i></span><span class="confn">${c}% · ${nomeConf(c)}</span></span>`; }
+  return `<span class="row conf" style="gap:8px"><span class="meter" title="Confiança ${c}%"><i class="conf-${n}" style="width:${c}%"></i></span><span class="confn">${c}% · ${nomeConf(c)}</span></span>`; }
 function ev(id){ return eventos.find(e=>e.id===id); }
 function ativos(){ return eventos.filter(e=>!["ENCERRADO","DESCARTADO"].includes(e.status)); }
 function porPrioridade(l){ return [...l].sort((a,b)=>prioridade(b)-prioridade(a)); }
 function origemPrincipal(e){ return ORIGENS[e.evidencias[0].origem].nome; }
 
 /* ====================== Telas ====================== */
+const ICONES = {"painel": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\"/>", "mapa": "<path d=\"M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/>", "alertas": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/>", "notificacoes": "<path d=\"M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9\"/><path d=\"M10.3 21a1.94 1.94 0 0 0 3.4 0\"/>", "registrar": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 12h8\"/><path d=\"M12 8v8\"/>", "confianca": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/><path d=\"m9 12 2 2 4-4\"/>", "fontes": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\"/>", "privacidade": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/>"};
 const TELAS = [
- ["painel","Painel de acompanhamento","▦"],
- ["mapa","Mapa de eventos","◎"],
- ["alertas","Alertas","▲"],
- ["notificacoes","Central de notificações","✉"],
- ["registrar","Registrar ocorrência","＋"],
- ["confianca","Origem e confiança dos dados","✓"],
- ["fontes","Saúde das fontes","⚙"],
- ["privacidade","Preferências e privacidade","🔒"]
+ ["painel","Painel de acompanhamento"],
+ ["mapa","Mapa de eventos"],
+ ["alertas","Alertas"],
+ ["notificacoes","Central de notificações"],
+ ["registrar","Registrar ocorrência"],
+ ["confianca","Origem e confiança dos dados"],
+ ["fontes","Saúde das fontes"],
+ ["privacidade","Preferências e privacidade"]
 ];
 
 function renderNav(){
   const naoLidas = notificacoes.filter(n=>!n.lida).length;
-  $("#nav").innerHTML = TELAS.map(([id,nome,ic])=>
+  $("#nav").innerHTML = TELAS.map(([id,nome])=>
     `<button class="${tela===id||(tela==="detalhe"&&id==="alertas")?"on":""}" data-t="${id}" aria-current="${tela===id}">
-       <span aria-hidden="true">${ic}</span>${nome}${id==="notificacoes"&&naoLidas?`<span class="badge">${naoLidas}</span>`:""}</button>`).join("");
+       <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${ICONES[id]}</svg>${nome}${id==="notificacoes"&&naoLidas?`<span class="badge" aria-label="${naoLidas} não lidas">${naoLidas}</span>`:""}</button>`).join("");
   $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>ir(b.dataset.t));
 }
 function ir(t,c){ tela=t; ctx=c||{}; location.hash=(t==="detalhe"&&c&&c.id)?"detalhe/"+c.id:t; render(); window.scrollTo(0,0); }
 
-function eventoItem(e){
-  return `<div class="item" data-ev="${e.id}" tabindex="0" role="button" aria-label="Abrir ${esc(e.titulo)}">
+function eventoItem(e,rank){
+  return `<div class="item r-${e.risco}${rank?"":" sem-rank"}" data-ev="${e.id}" tabindex="0" role="button" aria-label="Abrir ${esc(e.titulo)}">
+    ${rank?`<span class="rank" aria-hidden="true">${rank}</span>`:""}
     <div class="main"><div class="title">${esc(e.titulo)}</div>
       <div class="meta">${e.id} · ${esc(e.bairro)} · ${pillTipo(e.tipo)} ${pillRisco(e.risco)} ${pillStatus(e.status)}</div>
       <div class="meta">Origem principal: ${origemPrincipal(e)} · ${e.evidencias.length} evidência(s) · prioridade ${prioridade(e)}</div></div>
@@ -233,20 +283,20 @@ function bindItens(root){ root.querySelectorAll("[data-ev]").forEach(el=>{
   el.onkeydown=(k)=>{ if(k.key==="Enter") el.click(); }; }); }
 
 function mapaSVG(lista,altura=300){
-  const cor={ALAGAMENTO:"#1976d2",CALOR:"#ef6c00",SERVICOS:"#6d4c41"};
+  const cor={ALAGAMENTO:"#0a6f8f",CALOR:"#a85600",SERVICOS:"#6a4f3a"};
   const bairros = Object.entries(BAIRROS).map(([n,b])=>
     `<g><circle cx="${b.x}" cy="${b.y}" r="46" fill="${b.vuln?"rgba(198,40,40,.10)":"rgba(55,71,79,.07)"}" stroke="${b.vuln?"#c62828":"#78909c"}" stroke-dasharray="4 3"/>
      <text x="${b.x}" y="${b.y+62}" text-anchor="middle">${n}${b.vuln?" ★":""}</text></g>`).join("");
   const marc = lista.map((e,i)=>{ const b=BAIRROS[e.bairro]; const dx=(i%3-1)*18, dy=(Math.floor(i/3)%2)*18-8;
     const r = 7+RISCO_PESO[e.risco]*2;
     return `<g class="mk" data-ev="${e.id}" tabindex="0"><title>${esc(e.titulo)} (${e.id})</title>
-      <circle cx="${b.x+dx}" cy="${b.y+dy}" r="${r}" fill="${cor[e.tipo]}" stroke="#fff" stroke-width="2"/>
+      <circle cx="${b.x+dx}" cy="${b.y+dy}" r="22" fill="transparent"/><circle class="shape" cx="${b.x+dx}" cy="${b.y+dy}" r="${r}" fill="${cor[e.tipo]}" stroke="#fff" stroke-width="2"/>
       <text x="${b.x+dx}" y="${b.y+dy+3.5}" text-anchor="middle" style="fill:#fff;font-weight:700">${RISCO_PESO[e.risco]}</text></g>`; }).join("");
   return `<svg class="map" viewBox="0 0 520 ${altura}" role="img" aria-label="Mapa esquemático dos bairros e eventos">
     <path d="M0 150 C120 120 200 180 300 140 S470 120 520 150" stroke="#90caf9" stroke-width="10" fill="none" opacity=".7"/>
     <text x="440" y="132">Canal Ribeira</text>${bairros}${marc}</svg>`;
 }
-function legendaMapa(){ return `<div class="meta" style="margin-top:8px">Cor = tipo (<span class="dot" style="background:#1976d2"></span>alagamento <span class="dot" style="background:#ef6c00"></span>calor <span class="dot" style="background:#6d4c41"></span>serviços) · número = risco (1 baixo … 4 crítico) · ★ = área vulnerável</div>`; }
+function legendaMapa(){ return `<div class="meta" style="margin-top:8px">Cor = tipo (<span class="dot" style="background:#0a6f8f"></span>alagamento <span class="dot" style="background:#a85600"></span>calor <span class="dot" style="background:#6a4f3a"></span>serviços) · número = risco (1 baixo … 4 crítico) · ★ = área vulnerável</div>`; }
 
 function vPainel(){
   const at = ativos(), top = porPrioridade(at).slice(0,3);
@@ -255,15 +305,15 @@ function vPainel(){
   const media = at.length? Math.round(at.reduce((s,e)=>s+confianca(e),0)/at.length):0;
   const on = fontes.filter(f=>f.status==="on").length;
   return `<h2>Painel de acompanhamento</h2><p class="sub">Visão geral de ${at.length} eventos ativos em Nova Aurora · atualizado às ${hora(0)} (atualização a cada 30 s)</p>
-  <div class="grid kpis">
-    <div class="card kpi"><div class="v">${emitidos}</div><div class="l">Alertas emitidos</div></div>
-    <div class="card kpi"><div class="v">${val}</div><div class="l">Eventos aguardando validação</div></div>
-    <div class="card kpi"><div class="v">${media}%</div><div class="l">Confiança média dos dados</div></div>
-    <div class="card kpi"><div class="v">${on}/${fontes.length}</div><div class="l">Fontes de dados online</div></div>
-  </div><br>
+  <section class="band" aria-label="Situação atual">
+    <div class="stat"><span class="num">${emitidos}</span><span class="lab">Alertas emitidos</span></div>
+    <div class="stat"><span class="num">${val}</span><span class="lab">Eventos aguardando validação</span></div>
+    <div class="stat"><span class="num">${media}%</span><span class="lab">Confiança média dos dados</span></div>
+    <div class="stat"><span class="num">${on}<small>/${fontes.length}</small></span><span class="lab">Fontes de dados online</span></div>
+  </section>
   <div class="grid two">
     <div class="card"><h3>Mapa de eventos</h3>${mapaSVG(at)}${legendaMapa()}</div>
-    <div class="card"><h3>Alertas prioritários</h3>${top.map(eventoItem).join("")||"<p class='meta'>Nenhum evento ativo.</p>"}
+    <div class="card"><h3>Alertas prioritários</h3>${top.map((e,i)=>eventoItem(e,i+1)).join("")||"<p class='meta'>Nenhum evento ativo.</p>"}
       <p><button class="btn sec" data-go="alertas">Ver todos os alertas</button></p></div>
   </div>`;
 }
@@ -431,7 +481,9 @@ function enviarRelato(x){
   ir("detalhe",{id});
 }
 $("#persona").onchange=e=>{ persona=e.target.value; render(); toast("Perfil alterado."); };
-window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(VIEWS[h]&&h!==tela&&h!=="detalhe"){ tela=h; ctx={}; render(); } });
+window.addEventListener("hashchange",()=>{ const [h,id]=location.hash.slice(1).split("/");
+  if(h==="detalhe" && id && ev(id)){ if(!(tela==="detalhe"&&ctx.id===id)){ tela="detalhe"; ctx={id}; render(); } }
+  else if(VIEWS[h]&&h!==tela&&h!=="detalhe"){ tela=h; ctx={}; render(); } });
 (()=>{ const [h,id]=location.hash.slice(1).split("/");
   if(h==="detalhe" && id && ev(id)){ tela="detalhe"; ctx={id}; }
   else if(VIEWS[h] && h!=="detalhe") tela=h; })();
