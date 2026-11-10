@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Urban Risk Intelligence Platform – Protótipo</title>
+<style>
+:root{
+  --bg:#f4f6f8; --card:#ffffff; --ink:#1f2933; --muted:#62707d; --line:#dde3e9;
+  --brand:#c2185b; --brand-ink:#ffffff; --side:#263238; --side-ink:#eceff1;
+  --ok:#2e7d32; --warn:#f9a825; --danger:#c62828; --crit:#6a1b9a; --info:#1565c0;
+  --water:#1976d2; --heat:#ef6c00; --serv:#6d4c41;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#11171c; --card:#1a232b; --ink:#e8edf1; --muted:#9aa8b4; --line:#2c3944; --side:#0c1115; }
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+a{color:inherit}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--side);color:var(--side-ink);padding:16px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+aside h1{font-size:15px;margin:4px 8px 14px;letter-spacing:.3px}
+aside h1 small{display:block;font-weight:400;opacity:.7;font-size:11px;margin-top:2px}
+nav button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;color:inherit;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:14px}
+nav button:hover{background:rgba(255,255,255,.08)}
+nav button.on{background:var(--brand);color:var(--brand-ink)}
+nav .badge{margin-left:auto;background:var(--danger);color:#fff;border-radius:10px;font-size:11px;padding:1px 7px}
+.persona{margin:14px 6px 0;font-size:12px}
+.persona select{width:100%;margin-top:4px}
+main{padding:22px 26px 60px;max-width:1180px;width:100%}
+h2{margin:0 0 4px;font-size:22px}
+.sub{color:var(--muted);margin:0 0 18px;font-size:14px}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.two{grid-template-columns:1.4fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{margin:0 0 10px;font-size:15px}
+.kpi .v{font-size:28px;font-weight:700}
+.kpi .l{font-size:12.5px;color:var(--muted)}
+.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-size:12px;font-weight:600;color:#fff}
+.p-BAIXO{background:var(--ok)} .p-MEDIO{background:var(--warn);color:#222} .p-ALTO{background:var(--danger)} .p-CRITICO{background:var(--crit)}
+.t-ALAGAMENTO{background:var(--water)} .t-CALOR{background:var(--heat)} .t-SERVICOS{background:var(--serv)}
+.st{background:#546e7a}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.item{display:flex;gap:12px;align-items:center;padding:11px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.item:last-child{border-bottom:0}
+.item:hover{background:rgba(127,127,127,.07)}
+.item .main{flex:1;min-width:0}
+.item .title{font-weight:600}
+.item .meta{font-size:12.5px;color:var(--muted)}
+.meter{height:8px;background:var(--line);border-radius:6px;overflow:hidden;min-width:90px}
+.meter>i{display:block;height:100%}
+.conf-Alta{background:var(--ok)} .conf-Media{background:var(--warn)} .conf-Baixa{background:var(--danger)}
+.confn{font-size:12.5px;font-weight:600;min-width:96px}
+button.btn,.btn{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer}
+button.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.btn:disabled{opacity:.45;cursor:not-allowed}
+select,input[type=text],textarea,input[type=number]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);width:100%}
+label{font-size:13px;font-weight:600;display:block;margin:12px 0 4px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.filters select{width:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.map{width:100%;height:auto;border-radius:10px;background:#dfe8ee;border:1px solid var(--line)}
+@media (prefers-color-scheme: dark){.map{background:#22313b}}
+.map text{font-size:11px;fill:#455a64}
+@media (prefers-color-scheme: dark){.map text{fill:#b0bec5}}
+.mk{cursor:pointer}
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:0 0 12px 14px;font-size:13.5px}
+.timeline li:before{content:"";position:absolute;left:-22px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+.notice{background:rgba(21,101,192,.12);border:1px solid rgba(21,101,192,.35);border-radius:10px;padding:10px 12px;font-size:13px}
+.warnbox{background:rgba(249,168,37,.15);border:1px solid rgba(249,168,37,.5);border-radius:10px;padding:10px 12px;font-size:13px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+.on-line{background:var(--ok)} .off-line{background:var(--danger)} .deg-line{background:var(--warn)}
+.toast{position:fixed;right:16px;bottom:16px;background:#263238;color:#fff;padding:12px 16px;border-radius:10px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;z-index:20}
+.unread{font-weight:700}
+.mono{font-variant-numeric:tabular-nums}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  aside{position:static;height:auto;padding:10px}
+  nav{display:flex;overflow:auto;gap:4px} nav button{white-space:nowrap;width:auto}
+  main{padding:16px}
+  .two{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <h1>Urban Risk Intelligence<small>Nova Aurora – monitoramento de riscos urbanos</small></h1>
+  <nav id="nav"></nav>
+  <div class="persona">
+    <label for="persona" style="margin:0">Perfil de uso</label>
+    <select id="persona">
+      <option value="morador">Morador</option>
+      <option value="agente" selected>Agente da Defesa Civil</option>
+      <option value="operador">Operador de serviço público</option>
+    </select>
+  </div>
+</aside>
+<main id="view"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ====================== Dados e regras de negócio ====================== */
+const TIPOS = {ALAGAMENTO:"Alagamento", CALOR:"Ilha de calor", SERVICOS:"Interrupção de serviço"};
+const ORIGENS = {
+  SENSOR:{nome:"Sensor IoT", base:90, desc:"Medição automática calibrada"},
+  PUBLICA:{nome:"Base pública", base:75, desc:"Defesa Civil, INMET, concessionárias"},
+  COMUNIDADE:{nome:"Registro comunitário", base:40, desc:"Relato de morador, sem verificação"}
+};
+const FLUXO = ["REPORTADO","EM_VALIDACAO","CONFIRMADO","ALERTA_EMITIDO","EM_MONITORAMENTO","ENCERRADO"];
+const STATUS_NOME = {REPORTADO:"Reportado",EM_VALIDACAO:"Em validação",CONFIRMADO:"Confirmado",ALERTA_EMITIDO:"Alerta emitido",EM_MONITORAMENTO:"Em monitoramento",ENCERRADO:"Encerrado",DESCARTADO:"Descartado"};
+const RISCO_PESO = {BAIXO:1,MEDIO:2,ALTO:3,CRITICO:4};
+
+/* RN-01: confiança = base da fonte principal + 15 por evidência independente adicional (máx. 100).
+   RN-02: nível de confiança: >=80 Alta, 50-79 Média, <50 Baixa.
+   RN-03: prioridade = peso do risco x 20 + confiança x 0,2 + 10 se área vulnerável (0-100).
+   RN-04: alerta só pode ser emitido para evento CONFIRMADO; evento com confiança Baixa exige validação humana. */
+function confianca(e){
+  const principal = ORIGENS[e.evidencias[0].origem].base;
+  const extra = e.evidencias.slice(1).length * 15;
+  return Math.min(100, principal + extra);
+}
+function nivelConf(c){ return c>=80?"Alta":(c>=50?"Media":"Baixa"); }
+function nomeConf(c){ return c>=80?"Alta":(c>=50?"Média":"Baixa"); }
+function prioridade(e){
+  return Math.round(RISCO_PESO[e.risco]*20 + confianca(e)*0.2 + (e.vulneravel?10:0));
+}
+
+const BAIRROS = {
+  "Ribeira":{x:120,y:110,vuln:true}, "Sol":{x:380,y:70,vuln:true}, "Central":{x:260,y:190,vuln:false},
+  "Vila Nova":{x:90,y:230,vuln:true}, "Jardim das Flores":{x:420,y:210,vuln:false}, "Porto Seco":{x:240,y:60,vuln:false}
+};
+
+let agora = new Date(2026,10,12,9,40);
+const hora = (min)=>{ const d=new Date(agora.getTime()-min*60000); return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}); };
+
+let eventos = [
+ {id:"EV-1042",tipo:"ALAGAMENTO",bairro:"Ribeira",risco:"ALTO",vulneravel:true,status:"ALERTA_EMITIDO",
+  titulo:"Nível do canal acima do limite",desc:"Canal Ribeira a 2,4 m (limite de atenção: 2,0 m) e drenagem inoperante.",
+  evidencias:[{origem:"SENSOR",fonte:"Sensor de nível S-014",min:12},{origem:"PUBLICA",fonte:"Defesa Civil – boletim de chuva",min:30},{origem:"COMUNIDADE",fonte:"Relato de morador (rua das Acácias)",min:25}],
+  hist:[["REPORTADO",95],["EM_VALIDACAO",90],["CONFIRMADO",80],["ALERTA_EMITIDO",70]]},
+ {id:"EV-1043",tipo:"SERVICOS",bairro:"Central",risco:"CRITICO",vulneravel:false,status:"CONFIRMADO",
+  titulo:"Falha simultânea de energia e água",desc:"Subestação SE-07 fora de operação e adutora com pressão zero. Cerca de 3.200 imóveis afetados.",
+  evidencias:[{origem:"PUBLICA",fonte:"Concessionária de energia – nota operacional",min:20},{origem:"SENSOR",fonte:"Medidor de pressão M-221",min:18}],
+  hist:[["REPORTADO",40],["EM_VALIDACAO",35],["CONFIRMADO",20]]},
+ {id:"EV-1044",tipo:"CALOR",bairro:"Sol",risco:"ALTO",vulneravel:true,status:"EM_MONITORAMENTO",
+  titulo:"Índice de calor elevado sem abrigo climático",desc:"41 °C, umidade de 18% e nenhum abrigo climático disponível na região.",
+  evidencias:[{origem:"SENSOR",fonte:"Estação meteorológica EM-03",min:8},{origem:"PUBLICA",fonte:"INMET – alerta de onda de calor",min:60}],
+  hist:[["REPORTADO",180],["EM_VALIDACAO",170],["CONFIRMADO",150],["ALERTA_EMITIDO",140],["EM_MONITORAMENTO",100]]},
+ {id:"EV-1045",tipo:"ALAGAMENTO",bairro:"Vila Nova",risco:"MEDIO",vulneravel:true,status:"EM_VALIDACAO",
+  titulo:"Água acumulada na rua principal",desc:"Moradores relatam água na altura do tornozelo; sensor mais próximo está a 900 m.",
+  evidencias:[{origem:"COMUNIDADE",fonte:"3 relatos de moradores",min:22},{origem:"PUBLICA",fonte:"Defesa Civil – previsão de chuva forte",min:45}],
+  hist:[["REPORTADO",22],["EM_VALIDACAO",15]]},
+ {id:"EV-1046",tipo:"SERVICOS",bairro:"Jardim das Flores",risco:"MEDIO",vulneravel:false,status:"REPORTADO",
+  titulo:"Pedido de socorro sem comunicação local",desc:"Pedido registrado por rádio comunitário; operadora informa instabilidade na região.",
+  evidencias:[{origem:"COMUNIDADE",fonte:"Rádio comunitário",min:6}],
+  hist:[["REPORTADO",6]]},
+ {id:"EV-1047",tipo:"ALAGAMENTO",bairro:"Porto Seco",risco:"BAIXO",vulneravel:false,status:"EM_MONITORAMENTO",
+  titulo:"Nível do poço em atenção",desc:"Poço de coleta a 65% da capacidade; bomba operando com vazão normal.",
+  evidencias:[{origem:"SENSOR",fonte:"Sensor de nível S-031",min:3}],
+  hist:[["REPORTADO",70],["EM_VALIDACAO",65],["CONFIRMADO",60],["EM_MONITORAMENTO",55]]}
+];
+let notificacoes = [
+ {id:1,ev:"EV-1042",texto:"ALERTA: risco ALTO de alagamento na Ribeira. Evite a área do canal.",min:70,lida:false,canal:"Push"},
+ {id:2,ev:"EV-1044",texto:"Onda de calor no bairro Sol. Abrigos climáticos: nenhum disponível. Hidrate-se.",min:140,lida:false,canal:"SMS"},
+ {id:3,ev:"EV-1043",texto:"Evento CONFIRMADO: falha simultânea de energia e água no Central.",min:20,lida:false,canal:"Push"},
+ {id:4,ev:"EV-1047",texto:"Poço do Porto Seco em atenção (65%). Monitoramento ativo.",min:55,lida:true,canal:"E-mail"}
+];
+const fontes = [
+ {nome:"Sensores de nível (S-0xx)",tipo:"SENSOR",status:"on",lat:420,disp:99.6,upd:"18 s"},
+ {nome:"Estações meteorológicas (EM-0x)",tipo:"SENSOR",status:"on",lat:610,disp:99.1,upd:"60 s"},
+ {nome:"Medidores de pressão de água (M-2xx)",tipo:"SENSOR",status:"deg",lat:2300,disp:96.4,upd:"3 min"},
+ {nome:"Boletins da Defesa Civil",tipo:"PUBLICA",status:"on",lat:900,disp:99.9,upd:"5 min"},
+ {nome:"INMET – alertas meteorológicos",tipo:"PUBLICA",status:"on",lat:1100,disp:99.7,upd:"10 min"},
+ {nome:"Concessionária de energia",tipo:"PUBLICA",status:"off",lat:0,disp:92.3,upd:"sem resposta há 14 min"},
+ {nome:"Registros comunitários (app/rádio)",tipo:"COMUNIDADE",status:"on",lat:300,disp:99.8,upd:"tempo real"}
+];
+let prefs = {push:true,sms:true,email:false,raio:2,tipos:{ALAGAMENTO:true,CALOR:true,SERVICOS:true},consentimento:true};
+
+let persona = "agente";
+let tela = "painel";
+let ctx = {};   // contexto (evento selecionado, filtros)
+
+/* ====================== Utilitários ====================== */
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = (s)=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.style.display="block"; clearTimeout(toast.h); toast.h=setTimeout(()=>t.style.display="none",3600); }
+const pillRisco = (r)=>`<span class="pill p-${r}">${r==="MEDIO"?"MÉDIO":r}</span>`;
+const pillTipo = (t)=>`<span class="pill t-${t}">${TIPOS[t]}</span>`;
+const pillStatus = (s)=>`<span class="pill st">${STATUS_NOME[s]}</span>`;
+function confBar(e){ const c=confianca(e), n=nivelConf(c);
+  return `<span class="row" style="gap:8px"><span class="meter" title="Confiança ${c}%"><i class="conf-${n}" style="width:${c}%"></i></span><span class="confn">${c}% · ${nomeConf(c)}</span></span>`; }
+function ev(id){ return eventos.find(e=>e.id===id); }
+function ativos(){ return eventos.filter(e=>!["ENCERRADO","DESCARTADO"].includes(e.status)); }
+function porPrioridade(l){ return [...l].sort((a,b)=>prioridade(b)-prioridade(a)); }
+function origemPrincipal(e){ return ORIGENS[e.evidencias[0].origem].nome; }
+
+/* ====================== Telas ====================== */
+const TELAS = [
+ ["painel","Painel de acompanhamento","▦"],
+ ["mapa","Mapa de eventos","◎"],
+ ["alertas","Alertas","▲"],
+ ["notificacoes","Central de notificações","✉"],
+ ["registrar","Registrar ocorrência","＋"],
+ ["confianca","Origem e confiança dos dados","✓"],
+ ["fontes","Saúde das fontes","⚙"],
+ ["privacidade","Preferências e privacidade","🔒"]
+];
+
+function renderNav(){
+  const naoLidas = notificacoes.filter(n=>!n.lida).length;
+  $("#nav").innerHTML = TELAS.map(([id,nome,ic])=>
+    `<button class="${tela===id||(tela==="detalhe"&&id==="alertas")?"on":""}" data-t="${id}" aria-current="${tela===id}">
+       <span aria-hidden="true">${ic}</span>${nome}${id==="notificacoes"&&naoLidas?`<span class="badge">${naoLidas}</span>`:""}</button>`).join("");
+  $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>ir(b.dataset.t));
+}
+function ir(t,c){ tela=t; ctx=c||{}; location.hash=(t==="detalhe"&&c&&c.id)?"detalhe/"+c.id:t; render(); window.scrollTo(0,0); }
+
+function eventoItem(e){
+  return `<div class="item" data-ev="${e.id}" tabindex="0" role="button" aria-label="Abrir ${esc(e.titulo)}">
+    <div class="main"><div class="title">${esc(e.titulo)}</div>
+      <div class="meta">${e.id} · ${esc(e.bairro)} · ${pillTipo(e.tipo)} ${pillRisco(e.risco)} ${pillStatus(e.status)}</div>
+      <div class="meta">Origem principal: ${origemPrincipal(e)} · ${e.evidencias.length} evidência(s) · prioridade ${prioridade(e)}</div></div>
+    ${confBar(e)}</div>`;
+}
+function bindItens(root){ root.querySelectorAll("[data-ev]").forEach(el=>{
+  el.onclick=()=>ir("detalhe",{id:el.dataset.ev});
+  el.onkeydown=(k)=>{ if(k.key==="Enter") el.click(); }; }); }
+
+function mapaSVG(lista,altura=300){
+  const cor={ALAGAMENTO:"#1976d2",CALOR:"#ef6c00",SERVICOS:"#6d4c41"};
+  const bairros = Object.entries(BAIRROS).map(([n,b])=>
+    `<g><circle cx="${b.x}" cy="${b.y}" r="46" fill="${b.vuln?"rgba(198,40,40,.10)":"rgba(55,71,79,.07)"}" stroke="${b.vuln?"#c62828":"#78909c"}" stroke-dasharray="4 3"/>
+     <text x="${b.x}" y="${b.y+62}" text-anchor="middle">${n}${b.vuln?" ★":""}</text></g>`).join("");
+  const marc = lista.map((e,i)=>{ const b=BAIRROS[e.bairro]; const dx=(i%3-1)*18, dy=(Math.floor(i/3)%2)*18-8;
+    const r = 7+RISCO_PESO[e.risco]*2;
+    return `<g class="mk" data-ev="${e.id}" tabindex="0"><title>${esc(e.titulo)} (${e.id})</title>
+      <circle cx="${b.x+dx}" cy="${b.y+dy}" r="${r}" fill="${cor[e.tipo]}" stroke="#fff" stroke-width="2"/>
+      <text x="${b.x+dx}" y="${b.y+dy+3.5}" text-anchor="middle" style="fill:#fff;font-weight:700">${RISCO_PESO[e.risco]}</text></g>`; }).join("");
+  return `<svg class="map" viewBox="0 0 520 ${altura}" role="img" aria-label="Mapa esquemático dos bairros e eventos">
+    <path d="M0 150 C120 120 200 180 300 140 S470 120 520 150" stroke="#90caf9" stroke-width="10" fill="none" opacity=".7"/>
+    <text x="440" y="132">Canal Ribeira</text>${bairros}${marc}</svg>`;
+}
+function legendaMapa(){ return `<div class="meta" style="margin-top:8px">Cor = tipo (<span class="dot" style="background:#1976d2"></span>alagamento <span class="dot" style="background:#ef6c00"></span>calor <span class="dot" style="background:#6d4c41"></span>serviços) · número = risco (1 baixo … 4 crítico) · ★ = área vulnerável</div>`; }
+
+function vPainel(){
+  const at = ativos(), top = porPrioridade(at).slice(0,3);
+  const emitidos = at.filter(e=>e.status==="ALERTA_EMITIDO").length;
+  const val = at.filter(e=>["REPORTADO","EM_VALIDACAO"].includes(e.status)).length;
+  const media = at.length? Math.round(at.reduce((s,e)=>s+confianca(e),0)/at.length):0;
+  const on = fontes.filter(f=>f.status==="on").length;
+  return `<h2>Painel de acompanhamento</h2><p class="sub">Visão geral de ${at.length} eventos ativos em Nova Aurora · atualizado às ${hora(0)} (atualização a cada 30 s)</p>
+  <div class="grid kpis">
+    <div class="card kpi"><div class="v">${emitidos}</div><div class="l">Alertas emitidos</div></div>
+    <div class="card kpi"><div class="v">${val}</div><div class="l">Eventos aguardando validação</div></div>
+    <div class="card kpi"><div class="v">${media}%</div><div class="l">Confiança média dos dados</div></div>
+    <div class="card kpi"><div class="v">${on}/${fontes.length}</div><div class="l">Fontes de dados online</div></div>
+  </div><br>
+  <div class="grid two">
+    <div class="card"><h3>Mapa de eventos</h3>${mapaSVG(at)}${legendaMapa()}</div>
+    <div class="card"><h3>Alertas prioritários</h3>${top.map(eventoItem).join("")||"<p class='meta'>Nenhum evento ativo.</p>"}
+      <p><button class="btn sec" data-go="alertas">Ver todos os alertas</button></p></div>
+  </div>`;
+}
+function vMapa(){
+  const f = ctx.tipo||"";
+  const lista = ativos().filter(e=>!f||e.tipo===f);
+  return `<h2>Mapa de eventos</h2><p class="sub">Toque em um marcador para ver o detalhe do evento.</p>
+  <div class="filters"><select id="f-tipo" aria-label="Filtrar por tipo"><option value="">Todos os tipos</option>${Object.entries(TIPOS).map(([k,v])=>`<option value="${k}" ${f===k?"selected":""}>${v}</option>`).join("")}</select></div>
+  <div class="card">${mapaSVG(lista,300)}${legendaMapa()}</div>
+  <div class="card" style="margin-top:14px"><h3>Eventos no mapa (${lista.length})</h3>${porPrioridade(lista).map(eventoItem).join("")}</div>`;
+}
+function vAlertas(){
+  const ft=ctx.tipo||"", fr=ctx.risco||"", fs=ctx.status||"";
+  let l = eventos.filter(e=>(!ft||e.tipo===ft)&&(!fr||e.risco===fr)&&(!fs||e.status===fs));
+  l = porPrioridade(l);
+  return `<h2>Alertas e eventos</h2><p class="sub">Ordenados por prioridade (RN-03: risco × 20 + confiança × 0,2 + 10 se área vulnerável).</p>
+  <div class="filters">
+    <select id="f-tipo" aria-label="Tipo"><option value="">Todos os tipos</option>${Object.entries(TIPOS).map(([k,v])=>`<option value="${k}" ${ft===k?"selected":""}>${v}</option>`).join("")}</select>
+    <select id="f-risco" aria-label="Risco"><option value="">Todos os riscos</option>${Object.keys(RISCO_PESO).map(k=>`<option value="${k}" ${fr===k?"selected":""}>${k}</option>`).join("")}</select>
+    <select id="f-status" aria-label="Status"><option value="">Todos os status</option>${Object.entries(STATUS_NOME).map(([k,v])=>`<option value="${k}" ${fs===k?"selected":""}>${v}</option>`).join("")}</select></div>
+  <div class="card">${l.map(eventoItem).join("")||"<p class='meta'>Nenhum evento com esses filtros.</p>"}</div>`;
+}
+function acoesPara(e){
+  const p = persona;
+  const podeAgente = p==="agente";
+  const podeOperador = p==="operador" && e.tipo==="SERVICOS";
+  const pode = podeAgente||podeOperador;
+  const b = (acao,txt,dis=false,sec=false)=>`<button class="btn ${sec?"sec":""}" data-acao="${acao}" ${dis||!pode?"disabled":""}>${txt}</button>`;
+  const s = e.status;
+  return `<div class="row">
+    ${b("validar","Iniciar validação",s!=="REPORTADO")}
+    ${b("confirmar","Confirmar evento",s!=="EM_VALIDACAO")}
+    ${b("alertar","Emitir alerta",!["CONFIRMADO","EM_MONITORAMENTO"].includes(s))}
+    ${b("monitorar","Colocar em monitoramento",!["ALERTA_EMITIDO","CONFIRMADO"].includes(s),true)}
+    ${b("encerrar","Encerrar",s!=="EM_MONITORAMENTO",true)}
+    ${b("descartar","Descartar",!["REPORTADO","EM_VALIDACAO"].includes(s),true)}
+  </div>${pode?"":`<p class="meta">Seu perfil (${persona==="morador"?"Morador":"Operador de serviço público"}) não pode alterar o ciclo de vida deste evento. Troque o perfil para “Agente da Defesa Civil” no menu.</p>`}`;
+}
+function vDetalhe(){
+  const e = ev(ctx.id); if(!e) return "<p>Evento não encontrado.</p>";
+  const c = confianca(e);
+  const base = ORIGENS[e.evidencias[0].origem].base, extras = e.evidencias.length-1;
+  return `<p><button class="btn sec" data-go="alertas">← Voltar</button></p>
+  <h2>${esc(e.titulo)}</h2>
+  <p class="sub">${e.id} · ${esc(e.bairro)}${e.vulneravel?" · área vulnerável ★":""}</p>
+  <div class="row" style="margin-bottom:14px">${pillTipo(e.tipo)} ${pillRisco(e.risco)} ${pillStatus(e.status)} <span class="pill st">Prioridade ${prioridade(e)}</span></div>
+  <div class="grid two">
+   <div class="card"><h3>Descrição</h3><p>${esc(e.desc)}</p>
+     <h3>Origem e nível de confiança</h3>${confBar(e)}
+     <p class="meta">RN-01: confiança = base da fonte principal (${base}%) + 15% × ${extras} evidência(s) independente(s) = <b>${c}%</b>.
+     ${nivelConf(c)==="Baixa"?"<br><b>Confiança baixa: exige validação humana antes de qualquer alerta (RN-04).</b>":""}</p>
+     <table><thead><tr><th>Fonte</th><th>Origem</th><th>Recebido</th></tr></thead><tbody>
+     ${e.evidencias.map(v=>`<tr><td>${esc(v.fonte)}</td><td>${ORIGENS[v.origem].nome}</td><td class="mono">há ${v.min} min</td></tr>`).join("")}</tbody></table>
+   </div>
+   <div class="card"><h3>Ciclo de vida</h3><ul class="timeline">
+     ${e.hist.map(([s,m])=>`<li><b>${STATUS_NOME[s]}</b><br><span class="meta">há ${m} min</span></li>`).join("")}</ul>
+     <h3>Ações</h3>${acoesPara(e)}</div>
+  </div>`;
+}
+function vNotificacoes(){
+  const l = [...notificacoes].sort((a,b)=>a.min-b.min);
+  return `<h2>Central de notificações</h2><p class="sub">Alertas enviados a você de acordo com suas preferências.</p>
+  <p><button class="btn sec" id="marcar">Marcar todas como lidas</button></p>
+  <div class="card">${l.map(n=>`<div class="item" data-n="${n.id}" tabindex="0">
+     <div class="main"><div class="${n.lida?"":"unread"}">${esc(n.texto)}</div>
+     <div class="meta">${n.ev} · canal ${n.canal} · há ${n.min} min ${n.lida?"":"· <b>não lida</b>"}</div></div>
+     <button class="btn sec" data-abrir="${n.ev}">Ver evento</button></div>`).join("")}</div>`;
+}
+function vRegistrar(){
+  return `<h2>Registrar ocorrência</h2><p class="sub">Relate um problema na sua região. Seu relato entra como “Reportado” e passa por validação.</p>
+  <div class="card" style="max-width:640px"><form id="form" novalidate>
+    <label for="r-tipo">Tipo de ocorrência</label>
+    <select id="r-tipo">${Object.entries(TIPOS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>
+    <label for="r-bairro">Bairro</label>
+    <select id="r-bairro">${Object.keys(BAIRROS).map(b=>`<option>${b}</option>`).join("")}</select>
+    <label for="r-grav">Gravidade percebida</label>
+    <select id="r-grav"><option value="BAIXO">Baixa</option><option value="MEDIO" selected>Média</option><option value="ALTO">Alta</option></select>
+    <label for="r-desc">Descrição (mín. 10 caracteres)</label>
+    <textarea id="r-desc" rows="4" placeholder="Ex.: água acumulada na rua, nível na altura do joelho."></textarea>
+    <label><input type="checkbox" id="r-foto"> Anexar foto (simulado)</label>
+    <label><input type="checkbox" id="r-lgpd"> Concordo com o tratamento do meu relato e da minha localização aproximada para fins de proteção civil (LGPD, art. 7º). Meu nome não é exibido a outros usuários.</label>
+    <p id="r-erro" class="warnbox" style="display:none"></p>
+    <p><button class="btn" type="submit">Enviar relato</button></p>
+  </form></div>`;
+}
+function vConfianca(){
+  const resumo = Object.entries(ORIGENS).map(([k,o])=>{
+    const n = eventos.reduce((s,e)=>s+e.evidencias.filter(v=>v.origem===k).length,0);
+    return `<tr><td><b>${o.nome}</b><br><span class="meta">${o.desc}</span></td><td class="mono">${o.base}%</td><td class="mono">${n}</td></tr>`; }).join("");
+  return `<h2>Origem e nível de confiança dos dados</h2><p class="sub">Transparência sobre de onde vem cada informação e quanto ela é confiável.</p>
+  <div class="grid two">
+   <div class="card"><h3>Fontes e confiabilidade base</h3><table><thead><tr><th>Origem</th><th>Base</th><th>Evidências</th></tr></thead><tbody>${resumo}</tbody></table>
+     <div class="notice" style="margin-top:12px"><b>Como calculamos (RN-01 e RN-02)</b><br>Confiança = base da fonte principal + 15% por evidência independente adicional (máximo 100%).<br>
+     <b>Alta</b> ≥ 80% · <b>Média</b> 50–79% · <b>Baixa</b> &lt; 50% (exige validação humana).</div></div>
+   <div class="card"><h3>Confiança por evento</h3>${porPrioridade(eventos).map(e=>`<div class="item" data-ev="${e.id}" tabindex="0"><div class="main"><div class="title">${e.id} · ${esc(e.bairro)}</div><div class="meta">${origemPrincipal(e)} + ${e.evidencias.length-1} adicional(is)</div></div>${confBar(e)}</div>`).join("")}</div>
+  </div>`;
+}
+function vFontes(){
+  const nome={on:"Online",deg:"Degradada",off:"Offline"};
+  return `<h2>Saúde das fontes de dados</h2><p class="sub">Acompanhamento de disponibilidade e tempo de atualização (metas: atualização ≤ 60 s para sensores; disponibilidade ≥ 99%).</p>
+  <div class="card"><table><thead><tr><th>Fonte</th><th>Tipo</th><th>Estado</th><th>Latência</th><th>Disponibilidade (30 dias)</th><th>Última atualização</th></tr></thead><tbody>
+  ${fontes.map(f=>`<tr><td>${f.nome}</td><td>${ORIGENS[f.tipo].nome}</td><td><span class="dot ${f.status}-line"></span>${nome[f.status]}</td><td class="mono">${f.status==="off"?"—":f.lat+" ms"}</td><td class="mono">${f.disp}%</td><td>${f.upd}</td></tr>`).join("")}</tbody></table>
+  <div class="warnbox" style="margin-top:12px">Quando uma fonte está offline ou degradada, os eventos que dependem só dela têm a confiança reduzida e o sistema exibe aviso de dados desatualizados.</div></div>`;
+}
+function vPrivacidade(){
+  const chk=(id,v,t)=>`<label style="font-weight:400"><input type="checkbox" id="${id}" ${v?"checked":""}> ${t}</label>`;
+  return `<h2>Preferências e privacidade</h2><p class="sub">Controle como você recebe alertas e como seus dados são tratados (LGPD).</p>
+  <div class="grid two">
+   <div class="card"><h3>Notificações</h3>
+     ${chk("p-push",prefs.push,"Push no aplicativo")}${chk("p-sms",prefs.sms,"SMS")}${chk("p-email",prefs.email,"E-mail")}
+     <label for="p-raio">Raio de interesse (km)</label><input id="p-raio" type="number" min="0.5" max="20" step="0.5" value="${prefs.raio}">
+     <label>Tipos de alerta</label>
+     ${Object.entries(TIPOS).map(([k,v])=>chk("p-t-"+k,prefs.tipos[k],v)).join("")}
+     <p><button class="btn" id="p-salvar">Salvar preferências</button></p></div>
+   <div class="card"><h3>Seus dados (LGPD)</h3>
+     <ul style="padding-left:18px;margin-top:0"><li>Coletamos apenas localização aproximada (bairro) e o texto do relato.</li><li>Relatos são anonimizados para outros usuários.</li><li>Dados pessoais são criptografados e mantidos por 12 meses.</li><li>Você pode exportar ou excluir seus dados a qualquer momento.</li></ul>
+     ${chk("p-cons",prefs.consentimento,"Consentimento para tratamento de dados de localização")}
+     <div class="row" style="margin-top:10px"><button class="btn sec" id="p-exp">Exportar meus dados</button><button class="btn sec" id="p-del">Excluir meus dados</button></div></div>
+  </div>`;
+}
+
+/* ====================== Render e eventos ====================== */
+const VIEWS = {painel:vPainel,mapa:vMapa,alertas:vAlertas,detalhe:vDetalhe,notificacoes:vNotificacoes,registrar:vRegistrar,confianca:vConfianca,fontes:vFontes,privacidade:vPrivacidade};
+function render(){
+  renderNav();
+  const root = $("#view"); root.innerHTML = VIEWS[tela]();
+  bindItens(root);
+  root.querySelectorAll(".mk").forEach(m=>{ m.onclick=()=>ir("detalhe",{id:m.dataset.ev}); m.onkeydown=k=>{if(k.key==="Enter")m.dispatchEvent(new Event("click"));}; });
+  root.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>ir(b.dataset.go));
+  const sel = (id,key)=>{ const s=$(id,root); if(s) s.onchange=()=>{ ctx[key]=s.value; render(); }; };
+  sel("#f-tipo","tipo"); sel("#f-risco","risco"); sel("#f-status","status");
+  root.querySelectorAll("[data-acao]").forEach(b=>b.onclick=()=>acao(b.dataset.acao));
+  const marcar=$("#marcar",root); if(marcar) marcar.onclick=()=>{ notificacoes.forEach(n=>n.lida=true); render(); toast("Todas as notificações foram marcadas como lidas."); };
+  root.querySelectorAll("[data-abrir]").forEach(b=>b.onclick=(x)=>{ x.stopPropagation(); const n=notificacoes.find(n=>n.ev===b.dataset.abrir); if(n) n.lida=true; ir("detalhe",{id:b.dataset.abrir}); });
+  const form=$("#form",root); if(form) form.onsubmit=enviarRelato;
+  const salvar=$("#p-salvar",root);
+  if(salvar){ salvar.onclick=()=>{ prefs.push=$("#p-push").checked; prefs.sms=$("#p-sms").checked; prefs.email=$("#p-email").checked;
+      prefs.raio=parseFloat($("#p-raio").value)||2; Object.keys(TIPOS).forEach(k=>prefs.tipos[k]=$("#p-t-"+k).checked); prefs.consentimento=$("#p-cons").checked; toast("Preferências salvas."); };
+    $("#p-exp").onclick=()=>toast("Exportação solicitada. Você receberá um arquivo em até 15 dias (LGPD, art. 18).");
+    $("#p-del").onclick=()=>toast("Solicitação de exclusão registrada. Dados pessoais serão removidos e relatos ficarão anonimizados."); }
+}
+function acao(a){
+  const e = ev(ctx.id); if(!e) return;
+  const mover=(novo,msg,notificar)=>{ e.status=novo; e.hist.push([novo,0]); if(notificar){ notificacoes.unshift({id:Date.now(),ev:e.id,texto:notificar,min:0,lida:false,canal:"Push"}); } toast(msg); render(); };
+  const rotulo = `${TIPOS[e.tipo]} em ${e.bairro}`;
+  if(a==="validar") mover("EM_VALIDACAO","Validação iniciada.");
+  if(a==="confirmar") mover("CONFIRMADO","Evento confirmado.",`Evento CONFIRMADO: ${rotulo}.`);
+  if(a==="alertar"){
+    if(nivelConf(confianca(e))==="Baixa"){ toast("Confiança baixa: obtenha uma evidência adicional antes de emitir alerta (RN-04)."); return; }
+    mover("ALERTA_EMITIDO","Alerta emitido para os usuários da região.",`ALERTA: risco ${e.risco} – ${rotulo}. ${e.titulo}.`); }
+  if(a==="monitorar") mover("EM_MONITORAMENTO","Evento em monitoramento.");
+  if(a==="encerrar") mover("ENCERRADO","Evento encerrado.",`Encerrado: ${rotulo}. Situação normalizada.`);
+  if(a==="descartar") mover("DESCARTADO","Evento descartado como falso positivo.");
+}
+function enviarRelato(x){
+  x.preventDefault();
+  const d=$("#r-desc").value.trim(), erro=$("#r-erro");
+  const falhas=[]; if(d.length<10) falhas.push("Descreva a ocorrência com pelo menos 10 caracteres."); if(!$("#r-lgpd").checked) falhas.push("É necessário concordar com o tratamento de dados para enviar o relato.");
+  if(falhas.length){ erro.style.display="block"; erro.textContent=falhas.join(" "); return; }
+  const bairro=$("#r-bairro").value, tipo=$("#r-tipo").value;
+  const id="EV-"+(1048+eventos.length-6);
+  eventos.push({id,tipo,bairro,risco:$("#r-grav").value,vulneravel:BAIRROS[bairro].vuln,status:"REPORTADO",titulo:"Relato comunitário: "+TIPOS[tipo].toLowerCase(),desc:d,
+    evidencias:[{origem:"COMUNIDADE",fonte:"Registro comunitário (você)",min:0}],hist:[["REPORTADO",0]]});
+  toast("Relato enviado e registrado como "+id+". Confiança inicial: 40% (será validado).");
+  ir("detalhe",{id});
+}
+$("#persona").onchange=e=>{ persona=e.target.value; render(); toast("Perfil alterado."); };
+window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(VIEWS[h]&&h!==tela&&h!=="detalhe"){ tela=h; ctx={}; render(); } });
+(()=>{ const [h,id]=location.hash.slice(1).split("/");
+  if(h==="detalhe" && id && ev(id)){ tela="detalhe"; ctx={id}; }
+  else if(VIEWS[h] && h!=="detalhe") tela=h; })();
+render();
+/* simulação de atualização em tempo real do painel (a cada 30 s) */
+setInterval(()=>{ agora=new Date(agora.getTime()+30000); if(tela==="painel") render(); },30000);
+</script>
+</body>
+</html>
