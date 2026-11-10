@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#12263a">
 <title>Urban Risk Intelligence Platform – Protótipo</title>
+<script>
+/* tema: escolha salva > preferência do sistema (definido antes da pintura para não piscar) */
+(function(){var t=null;try{t=localStorage.getItem("urp-tema")}catch(e){}
+ if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+ document.documentElement.dataset.theme=t;})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#f2f4f6; --surface:#ffffff; --ink:#12263a; --muted:#566676; --line:#d5dce3;
@@ -13,14 +22,16 @@
   --water:#0a6f8f; --heat:#a85600; --serv:#6a4f3a;
   --band:#12263a; --band-ink:#ffffff; --band-muted:#a9bccd;
 }
-@media (prefers-color-scheme: dark){
-  :root{ --paper:#0e151c; --surface:#16202a; --ink:#e8edf1; --muted:#a3b1bd; --line:#2b3947; --side:#0a1016;
-         --accent:#5aa9f0; --accent-ink:#06121d; --band:#1b2c3d; --focus:#7db8f5;
-         --ok:#58b57a; --danger:#ef6a4d; --crit:#b57be0; --water:#4fb3d0; --heat:#e59a3d; --serv:#c0a086; }
+html[data-theme="dark"]{ color-scheme:dark; }
+html[data-theme="light"]{ color-scheme:light; }
+html[data-theme="dark"]{
+  --paper:#0e151c; --surface:#16202a; --ink:#e8edf1; --muted:#a3b1bd; --line:#2b3947; --side:#0a1016;
+  --accent:#5aa9f0; --accent-ink:#06121d; --band:#1b2c3d; --focus:#7db8f5;
+  --ok:#58b57a; --danger:#ef6a4d; --crit:#b57be0; --water:#4fb3d0; --heat:#e59a3d; --serv:#c0a086;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+body{margin:0;font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible","Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
   font-size:15px;background:var(--paper);color:var(--ink);line-height:1.5}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
@@ -59,7 +70,7 @@ h2{margin:0 0 4px;font-size:26px;font-weight:650;letter-spacing:-.015em;line-hei
 .p-BAIXO{background:var(--ok)} .p-MEDIO{background:var(--warn);color:#1b1b1b} .p-ALTO{background:var(--danger)} .p-CRITICO{background:var(--crit)}
 .t-ALAGAMENTO{background:var(--water)} .t-CALOR{background:var(--heat)} .t-SERVICOS{background:var(--serv)}
 .st{background:#4d6070}
-@media (prefers-color-scheme: dark){ .pill{color:#0b1218} .st{background:#8da1b3} }
+html[data-theme="dark"] .pill{color:#0b1218} html[data-theme="dark"] .st{background:#8da1b3}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
 /* linhas de evento: a barra lateral colorida indica o risco */
@@ -99,9 +110,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 th{font-size:13px;font-weight:600;color:var(--muted)}
 .map{width:100%;height:auto;border-radius:10px;background:#dde8ef;border:1px solid var(--line)}
-@media (prefers-color-scheme: dark){.map{background:#1c2b36}}
+html[data-theme="dark"] .map{background:#1c2b36}
 .map text{font-size:12px;fill:#3d5361}
-@media (prefers-color-scheme: dark){.map text{fill:#b7c6d1}}
+html[data-theme="dark"] .map text{fill:#b7c6d1}
 .mk{cursor:pointer}
 .mk:focus-visible{outline:none}
 .mk:focus-visible circle.shape{stroke:var(--focus);stroke-width:4}
@@ -110,7 +121,7 @@ th{font-size:13px;font-weight:600;color:var(--muted)}
 .timeline li:before{content:"";position:absolute;left:-23px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
 .notice{background:rgba(11,79,138,.1);border:1px solid rgba(11,79,138,.35);border-radius:10px;padding:12px 14px;font-size:14px}
 .warnbox{background:rgba(224,161,0,.16);border:1px solid rgba(224,161,0,.55);border-radius:10px;padding:12px 14px;font-size:14px}
-@media (prefers-color-scheme: dark){ .notice{background:rgba(90,169,240,.12);border-color:rgba(90,169,240,.4)} }
+html[data-theme="dark"] .notice{background:rgba(90,169,240,.12);border-color:rgba(90,169,240,.4)}
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
 .on-line{background:var(--ok)} .off-line{background:var(--danger)} .deg-line{background:var(--warn)}
 .toast{position:fixed;right:16px;bottom:16px;background:#12263a;color:#fff;padding:14px 18px;border-radius:10px;max-width:360px;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;z-index:20;font-size:14.5px}
@@ -129,7 +140,55 @@ th{font-size:13px;font-weight:600;color:var(--muted)}
   h2{font-size:23px}
   .band .stat{padding:14px 16px} .band .num{font-size:32px}
 }
-@media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important;animation:none!important} }
+
+/* faixa do perfil: deixa claro quem está usando e o que pode fazer */
+.who{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--surface);border-radius:10px;padding:10px 14px;margin:0 0 18px;font-size:14px}
+.who b{font-weight:700}
+.who span{color:var(--muted)}
+.who.lim{border-left-color:var(--warn)}
+
+/* etapas do ciclo de vida do evento */
+.steps{list-style:none;margin:0 0 18px;padding:0;display:flex;gap:0;overflow-x:auto}
+.steps li{flex:1 0 96px;position:relative;text-align:center;font-size:12.5px;color:var(--muted);padding:22px 4px 0}
+.steps li:before{content:"";position:absolute;top:7px;left:-50%;width:100%;height:2px;background:var(--line)}
+.steps li:first-child:before{display:none}
+.steps li:after{content:"";position:absolute;top:0;left:calc(50% - 8px);width:16px;height:16px;border-radius:50%;background:var(--surface);border:2px solid var(--line)}
+.steps li.done{color:var(--ink)}
+.steps li.done:before,.steps li.now:before{background:var(--accent)}
+.steps li.done:after{background:var(--accent);border-color:var(--accent)}
+.steps li.now{color:var(--ink);font-weight:700}
+.steps li.now:after{border-color:var(--accent);box-shadow:0 0 0 4px rgba(11,79,138,.22);background:var(--surface)}
+html[data-theme="dark"] .steps li.now:after{box-shadow:0 0 0 4px rgba(90,169,240,.28)}
+
+/* composição da confiança: mostra de onde vem cada ponto percentual */
+.cb{display:flex;height:22px;border-radius:6px;overflow:hidden;background:var(--line);position:relative;margin:10px 0 6px}
+.cb i{display:block;height:100%;border-right:2px solid var(--surface);font-style:normal}
+.cb .b0{background:var(--accent)} .cb .bx{background:var(--ok)}
+.cb-scale{position:relative;height:18px;font-size:12px;color:var(--muted)}
+.cb-scale span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.cb-scale span:before{content:"";position:absolute;left:50%;top:-4px;width:1px;height:4px;background:var(--muted)}
+.cb-leg{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:13px;margin-top:6px}
+.cb-leg .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+/* distribuição de eventos por risco (painel) */
+.dist{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:8px 0 10px;background:var(--line)}
+.dist i{display:block;height:100%;border-right:2px solid var(--surface)}
+.dist-leg{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:13.5px}
+.dist-leg b{font-variant-numeric:tabular-nums}
+
+/* mapa: pulso só nos eventos com alerta emitido */
+@keyframes pulso{0%{r:12;opacity:.55}100%{r:30;opacity:0}}
+.pulse{fill:none;stroke:var(--danger);stroke-width:2;animation:pulso 2.4s ease-out infinite;pointer-events:none}
+.map .rua{stroke:rgba(120,140,155,.28);stroke-width:1}
+.leg{display:flex;gap:6px 16px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--muted)}
+.leg .dot{margin-right:5px}
+
+#tema{margin-top:10px;width:100%;min-height:40px;font-size:13.5px;color:var(--side-ink);border-color:rgba(255,255,255,.28)}
+#tema:hover{background:rgba(255,255,255,.1)}
+.steps::-webkit-scrollbar{height:6px}
+main{min-width:0}
+@media (max-width:860px){ .who{font-size:13.5px} .steps li{flex:1 0 74px;font-size:11.5px} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important;animation:none!important} .pulse{display:none} }
 </style>
 </head>
 <body>
@@ -145,6 +204,7 @@ th{font-size:13px;font-weight:600;color:var(--muted)}
       <option value="agente" selected>Agente da Defesa Civil</option>
       <option value="operador">Operador de serviço público</option>
     </select>
+    <button class="btn sec" id="tema" type="button" aria-label="Alternar entre tema claro e escuro"></button>
   </div>
 </aside>
 <main id="view" tabindex="-1"></main>
@@ -289,14 +349,38 @@ function mapaSVG(lista,altura=300){
      <text x="${b.x}" y="${b.y+62}" text-anchor="middle">${n}${b.vuln?" ★":""}</text></g>`).join("");
   const marc = lista.map((e,i)=>{ const b=BAIRROS[e.bairro]; const dx=(i%3-1)*18, dy=(Math.floor(i/3)%2)*18-8;
     const r = 7+RISCO_PESO[e.risco]*2;
-    return `<g class="mk" data-ev="${e.id}" tabindex="0"><title>${esc(e.titulo)} (${e.id})</title>
+    return `<g class="mk" data-ev="${e.id}" tabindex="0" role="button" aria-label="${esc(e.titulo)}, risco ${ROTULO_RISCO[e.risco]}"><title>${esc(e.titulo)} (${e.id})</title>
+      ${e.status==="ALERTA_EMITIDO"?`<circle class="pulse" cx="${b.x+dx}" cy="${b.y+dy}" r="12"/>`:""}
       <circle cx="${b.x+dx}" cy="${b.y+dy}" r="22" fill="transparent"/><circle class="shape" cx="${b.x+dx}" cy="${b.y+dy}" r="${r}" fill="${cor[e.tipo]}" stroke="#fff" stroke-width="2"/>
       <text x="${b.x+dx}" y="${b.y+dy+3.5}" text-anchor="middle" style="fill:#fff;font-weight:700">${RISCO_PESO[e.risco]}</text></g>`; }).join("");
   return `<svg class="map" viewBox="0 0 520 ${altura}" role="img" aria-label="Mapa esquemático dos bairros e eventos">
+    <g aria-hidden="true">${[60,120,180,240].map(y=>`<line class="rua" x1="0" y1="${y}" x2="520" y2="${y+14}"/>`).join("")}${[70,170,270,370,470].map(x=>`<line class="rua" x1="${x}" y1="0" x2="${x-16}" y2="${altura}"/>`).join("")}</g>
     <path d="M0 150 C120 120 200 180 300 140 S470 120 520 150" stroke="#90caf9" stroke-width="10" fill="none" opacity=".7"/>
     <text x="440" y="132">Canal Ribeira</text>${bairros}${marc}</svg>`;
 }
-function legendaMapa(){ return `<div class="meta" style="margin-top:8px">Cor = tipo (<span class="dot" style="background:#0a6f8f"></span>alagamento <span class="dot" style="background:#a85600"></span>calor <span class="dot" style="background:#6a4f3a"></span>serviços) · número = risco (1 baixo … 4 crítico) · ★ = área vulnerável</div>`; }
+function legendaMapa(){ return `<div class="leg"><span><span class="dot" style="background:#0a6f8f"></span>Alagamento</span><span><span class="dot" style="background:#a85600"></span>Ilha de calor</span><span><span class="dot" style="background:#6a4f3a"></span>Serviços</span><span>Número no marcador: risco, de 1 (baixo) a 4 (crítico)</span><span>★ área vulnerável</span><span>Anel pulsando: alerta emitido</span></div>`; }
+const COR_RISCO = {BAIXO:"var(--ok)",MEDIO:"var(--warn)",ALTO:"var(--danger)",CRITICO:"var(--crit)"};
+function distribuicao(l){
+  const n = k=>l.filter(e=>e.risco===k).length;
+  const ks = ["CRITICO","ALTO","MEDIO","BAIXO"].filter(k=>n(k));
+  return `<div class="dist" role="img" aria-label="${ks.map(k=>n(k)+" "+ROTULO_RISCO[k]).join(", ")}">${ks.map(k=>`<i style="width:${n(k)/l.length*100}%;background:${COR_RISCO[k]}"></i>`).join("")}</div>
+    <div class="dist-leg">${["CRITICO","ALTO","MEDIO","BAIXO"].map(k=>`<span><span class="dot" style="background:${COR_RISCO[k]}"></span>${ROTULO_RISCO[k]} <b>${n(k)}</b></span>`).join("")}</div>`;
+}
+function composicaoConf(e){
+  const base = ORIGENS[e.evidencias[0].origem].base, extras = e.evidencias.length-1, c = confianca(e);
+  let segs = `<i class="b0" style="width:${base}%" title="Fonte principal: ${base}%"></i>`;
+  let acum = base;
+  for(let i=0;i<extras;i++){ const v=Math.min(15,100-acum); if(v<=0)break; segs+=`<i class="bx" style="width:${v}%" title="Evidência adicional: +${v}%"></i>`; acum+=v; }
+  return `<div class="cb" role="img" aria-label="Confiança de ${c}%: ${base}% da fonte principal${extras?` mais ${extras} evidência(s) de 15%`:""}">${segs}</div>
+   <div class="cb-scale" aria-hidden="true"><span style="left:0">0</span><span style="left:50%">50 (média)</span><span style="left:80%">80 (alta)</span><span style="left:100%">100</span></div>
+   <div class="cb-leg"><span><span class="sw" style="background:var(--accent)"></span>Fonte principal: ${base}%</span>${extras?`<span><span class="sw" style="background:var(--ok)"></span>${extras} evidência(s) adicional(is): +${c-base}%</span>`:"<span>Sem evidências adicionais</span>"}</div>`;
+}
+function faixaPerfil(){
+  const d = {morador:["Morador","pode registrar ocorrências e consultar alertas. Não altera o ciclo de vida dos eventos.",true],
+             agente:["Agente da Defesa Civil","pode validar, confirmar, emitir alertas e encerrar eventos.",false],
+             operador:["Operador de serviço público","atua só nos eventos de interrupção de serviço.",true]}[persona];
+  return `<div class="who${d[2]?" lim":""}"><span>Perfil atual:</span><b>${d[0]}</b><span>${d[1]}</span></div>`;
+}
 
 function vPainel(){
   const at = ativos(), top = porPrioridade(at).slice(0,3);
@@ -315,6 +399,12 @@ function vPainel(){
     <div class="card"><h3>Mapa de eventos</h3>${mapaSVG(at)}${legendaMapa()}</div>
     <div class="card"><h3>Alertas prioritários</h3>${top.map((e,i)=>eventoItem(e,i+1)).join("")||"<p class='meta'>Nenhum evento ativo.</p>"}
       <p><button class="btn sec" data-go="alertas">Ver todos os alertas</button></p></div>
+  </div>
+  <div class="grid two" style="margin-top:16px">
+    <div class="card"><h3>Eventos ativos por risco</h3>${distribuicao(at)}
+      <h3 style="margin-top:20px">Por etapa do ciclo de vida</h3>
+      <div class="dist-leg">${FLUXO.map(s=>({s,n:at.filter(e=>e.status===s).length})).filter(x=>x.n).map(x=>`<span>${STATUS_NOME[x.s]} <b>${x.n}</b></span>`).join("")}</div></div>
+    <div class="card"><h3>Últimas notificações</h3>${[...notificacoes].sort((a,b)=>a.min-b.min).slice(0,3).map(n=>`<div class="meta" style="padding:6px 0;border-bottom:1px solid var(--line)"><span class="${n.lida?"":"unread"}" style="color:var(--ink)">${esc(n.texto)}</span><br>${n.canal} · há ${n.min} min</div>`).join("")}</div>
   </div>`;
 }
 function vMapa(){
@@ -360,9 +450,11 @@ function vDetalhe(){
   <h2>${esc(e.titulo)}</h2>
   <p class="sub">${e.id} · ${esc(e.bairro)}${e.vulneravel?" · área vulnerável ★":""}</p>
   <div class="row" style="margin-bottom:14px">${pillTipo(e.tipo)} ${pillRisco(e.risco)} ${pillStatus(e.status)} <span class="pill st">Prioridade ${prioridade(e)}</span></div>
+  <ol class="steps" aria-label="Etapas do ciclo de vida">${FLUXO.map((s,i)=>{const k=FLUXO.indexOf(e.status===("DESCARTADO")?"REPORTADO":e.status); return `<li class="${i<k?"done":i===k?"now":""}"${i===k?' aria-current="step"':""}>${STATUS_NOME[s]}</li>`;}).join("")}</ol>
+  ${e.status==="DESCARTADO"?`<p class="warnbox">Este evento foi descartado como falso positivo e saiu do fluxo.</p>`:""}
   <div class="grid two">
    <div class="card"><h3>Descrição</h3><p>${esc(e.desc)}</p>
-     <h3>Origem e nível de confiança</h3>${confBar(e)}
+     <h3>Origem e nível de confiança</h3><p style="margin:0;font-size:22px;font-weight:700" class="mono">${c}% <span style="font-size:15px;font-weight:600;color:var(--muted)">confiança ${nomeConf(c).toLowerCase()}</span></p>${composicaoConf(e)}
      <p class="meta">RN-01: confiança = base da fonte principal (${base}%) + 15% × ${extras} evidência(s) independente(s) = <b>${c}%</b>.
      ${nivelConf(c)==="Baixa"?"<br><b>Confiança baixa: exige validação humana antes de qualquer alerta (RN-04).</b>":""}</p>
      <table><thead><tr><th>Fonte</th><th>Origem</th><th>Recebido</th></tr></thead><tbody>
@@ -439,7 +531,8 @@ function vPrivacidade(){
 const VIEWS = {painel:vPainel,mapa:vMapa,alertas:vAlertas,detalhe:vDetalhe,notificacoes:vNotificacoes,registrar:vRegistrar,confianca:vConfianca,fontes:vFontes,privacidade:vPrivacidade};
 function render(){
   renderNav();
-  const root = $("#view"); root.innerHTML = VIEWS[tela]();
+  const root = $("#view"); root.innerHTML = faixaPerfil() + VIEWS[tela]();
+  rotuloTema();
   bindItens(root);
   root.querySelectorAll(".mk").forEach(m=>{ m.onclick=()=>ir("detalhe",{id:m.dataset.ev}); m.onkeydown=k=>{if(k.key==="Enter")m.dispatchEvent(new Event("click"));}; });
   root.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>ir(b.dataset.go));
@@ -480,6 +573,8 @@ function enviarRelato(x){
   toast("Relato enviado e registrado como "+id+". Confiança inicial: 40% (será validado).");
   ir("detalhe",{id});
 }
+function rotuloTema(){ const b=$("#tema"); if(b) b.textContent = document.documentElement.dataset.theme==="dark" ? "Usar tema claro" : "Usar tema escuro"; }
+$("#tema").onclick=()=>{ const n=document.documentElement.dataset.theme==="dark"?"light":"dark"; document.documentElement.dataset.theme=n; try{localStorage.setItem("urp-tema",n)}catch(e){} rotuloTema(); };
 $("#persona").onchange=e=>{ persona=e.target.value; render(); toast("Perfil alterado."); };
 window.addEventListener("hashchange",()=>{ const [h,id]=location.hash.slice(1).split("/");
   if(h==="detalhe" && id && ev(id)){ if(!(tela==="detalhe"&&ctx.id===id)){ tela="detalhe"; ctx={id}; render(); } }
